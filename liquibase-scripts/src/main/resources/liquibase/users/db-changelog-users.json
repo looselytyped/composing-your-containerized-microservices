@@ -1,0 +1,20 @@
+{
+  "databaseChangeLog": [
+    {
+      "preConditions": [
+        {
+          "dbms": {
+            "type": "mysql"
+          }
+        }
+      ]
+    },
+    {
+      "include": {
+        "file": [
+          "liquibase/users/1.0/db-changelog-1.0.json"
+        ]
+      }
+    }
+  ]
+}

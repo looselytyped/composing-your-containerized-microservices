@@ -1,0 +1,108 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1",
+        "author": "raju",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "hibernate_sequence",
+              "columns": [
+                {
+                  "column": {
+                    "name": "next_val",
+                    "type": "BIGINT"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "rollback": [
+          {
+            "dropTable": {
+              "tableName": "hibernate_sequence"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "4",
+        "author": "raju",
+        "changes": [
+          {
+            "sql": {
+              "sql": "insert into hibernate_sequence (next_val) values (1);"
+            }
+          }
+        ],
+        "rollback": [
+          {
+            "sql": {
+              "sql": "delete from hibernate_sequence where next_val = 1;"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "2",
+        "author": "raju (generated)",
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true
+                    },
+                    "name": "id",
+                    "type": "INT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "email",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "name",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "user"
+            }
+          }
+        ],
+        "rollback": [
+          {
+            "dropTable": {
+              "tableName": "user"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "TAG",
+        "author": "Raju",
+        "changes": [
+          {
+            "tagDatabase": {
+              "tag": "1.0"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

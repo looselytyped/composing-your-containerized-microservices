@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Exit on error. Append "|| true" if you expect an error.
+set -o errexit
+# Exit on error inside any functions or subshells.
+set -o errtrace
+# Do not allow use of undefined vars. Use ${VAR:-} to use an undefined VAR
+set -o nounset
+# Catch the error in case mysqldump fails (but gzip succeeds) in `mysqldump |gzip`
+set -o pipefail
+
+
+if [ "$1" = 'default' ]; then
+  echo "APPLYING LIQUIBASE TAG ${TAG}"
+  # do default thing here
+  java -jar \
+    -Dtag=$TAG \
+    -DjdbcConnUrl=jdbc:mysql://host.docker.internal:3306/db_example?createDatabaseIfNotExist=true \
+    /app/liquibase-scripts.jar
+else
+  echo "Running user supplied arg"
+  # if the user supplied say /bin/bash
+  exec "$@"
+fi

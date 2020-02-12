@@ -1,0 +1,43 @@
+plugins {
+  id 'java-library'
+  id 'application'
+  id "net.nemerosa.versioning" version "2.10.0"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+sourceCompatibility = '11'
+mainClassName = 'com.looselytyped.liquibase.Starter'
+
+repositories {
+  jcenter()
+  mavenCentral()
+}
+
+dependencies {
+  // implementation 'org.mariadb.jdbc:mariadb-java-client:2.5.2'
+  // // The older version does NOT need snakeyml as a dependency
+  // compile group: 'org.liquibase', name: 'liquibase-core', version:'3.5.3'
+  // // implementation 'org.liquibase:liquibase-core:3.8.4'
+  // implementation 'org.yaml:snakeyaml:1.24'
+
+    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version:'2.2.3'
+  compile group: 'org.liquibase', name: 'liquibase-core', version:'3.5.3'
+  implementation 'org.apache.logging.log4j:log4j-core:2.13.0'
+  compile group: 'log4j', name: 'log4j', version:'1.2.17'
+
+}
+
+shadowJar {
+  manifest {
+    attributes(
+      'Implementation-Version': archiveVersion,
+      "Implementation-Title": projectName,
+      'Built-By': System.properties['user.name'],
+      'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()),
+      'Build-Revision': versioning.info.build,
+      'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})"
+    )
+  }
+  archiveBaseName = projectName
+  classifier = ""
+}
