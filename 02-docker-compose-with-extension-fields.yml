@@ -1,0 +1,18 @@
+services:
+  mongo-rs0-2:
+    command: --replSet rs0 --smallfiles --oplogSize 128
+    image: mongo
+    ports:
+    - published: 27018
+      target: 27017
+    volumes:
+    - /Users/raju/Documents/presentations/2020/composing-your-containerized-microservices/docker-boilerplates/mongodb-replicaset/mongo-rs0-2/data:/data/db:rw
+  mongo-rs0-3:
+    command: --replSet rs0 --smallfiles --oplogSize 128
+    image: mongo
+    ports:
+    - published: 27019
+      target: 27017
+    volumes:
+    - /Users/raju/Documents/presentations/2020/composing-your-containerized-microservices/docker-boilerplates/mongodb-replicaset/mongo-rs0-3/data:/data/db:rw
+version: '3.4'

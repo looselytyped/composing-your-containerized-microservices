@@ -1,0 +1,21 @@
+version: '3.4'
+x-mongo:
+  &mongo-replica-set
+  image: "mongo"
+  command: --replSet rs0 --smallfiles --oplogSize 128
+
+services:
+  # truncated for brevity
+  mongo-rs0-2:
+    <<: *mongo-replica-set
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./mongo-rs0-2/data:/data/db
+
+  mongo-rs0-3:
+    <<: *mongo-replica-set
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./mongo-rs0-3/data:/data/db
