@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  test:
+    image: ubuntu:19.10
+    entrypoint: env
+    environment:
+      NAME: "${NAME}"
+      TIER: "dev"
+    env_file: "dev.env"
