@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  sql-cli:
+    image: mariadb:10.2.11
+    command: mysql -hdb -u$DB_USER -p$DB_PASSWORD
+    networks:
+      - db

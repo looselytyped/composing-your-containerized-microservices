@@ -1,0 +1,61 @@
+version: "3.7"
+services:
+  users:
+    build:
+      context: ../users-service
+    command: ["sh", "-c", "./scripts/startup.sh $DB_USER $DB_PASSWORD"]
+    networks:
+      - service
+      - frontend
+    expose:
+      - 8080
+    volumes:
+      - ./users/scripts:/scripts
+      - liquibase:/semaphore/
+
+  db:
+    image: mariadb:10.2.11
+    expose:
+      - 3306
+    networks:
+      - db
+      - service
+    environment:
+      MYSQL_ROOT_PASSWORD: "$DB_PASSWORD"
+
+  liquibase:
+    build:
+      context: ../liquibase-scripts
+      args:
+        LIQUIBASE_TAG: $LIQUIBASE_TAG
+    command:
+      [
+        "sh",
+        "-c",
+        "./scripts/apply-liquibase-changesets.sh $DB_USER $DB_PASSWORD",
+      ]
+    networks:
+      - db
+    volumes:
+      - ./liquibase/scripts:/scripts
+      - liquibase:/semaphore/
+
+  proxy:
+    build:
+      context: ../nginx
+    depends_on:
+      - users
+    networks:
+      - frontend
+    ports:
+      - "9000:80"
+    volumes:
+      - ./users/nginx-conf/users.conf:/etc/nginx/conf.d/includes/users.conf
+
+networks:
+  db:
+  service:
+  frontend:
+
+volumes:
+  liquibase:
