@@ -9,4 +9,8 @@ set -o nounset
 # Catch the error in case mysqldump fails (but gzip succeeds) in `mysqldump |gzip`
 set -o pipefail
 
-
+until test -e /semaphore/liquibase-done.txt
+do
+  >&2 echo "Waiting for file [/semaphore/liquibase-done.txt]."
+  sleep 5
+done

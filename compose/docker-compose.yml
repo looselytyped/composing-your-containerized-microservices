@@ -8,21 +8,19 @@ services:
       MYSQL_ROOT_PASSWORD: "my-secret-pw"
     networks:
       - db
+      - service
 
   users:
     build:
-      context: "../users-service"
-    command:
-      [
-        "java",
-        "-jar",
-        "/var/app.jar",
-        "--spring.datasource.url=jdbc:mysql://host.docker.internal:3306/db_example",
-        "--spring.datasource.username=root",
-        "--spring.datasource.password=my-secret-pw",
-      ]
+      context: ../users-service
+    command: ["sh", "-c", "./scripts/startup.sh root my-secret-pw"]
+    networks:
+      - service
     ports:
       - 8080:8080
+    volumes:
+      - ./users/scripts:/scripts
+      - liquibase:/semaphore/
 
   liquibase:
     build:
@@ -35,6 +33,11 @@ services:
       - db
     volumes:
       - ./liquibase/scripts:/scripts
+      - liquibase:/semaphore/
 
 networks:
   db:
+  service:
+
+volumes:
+  liquibase:

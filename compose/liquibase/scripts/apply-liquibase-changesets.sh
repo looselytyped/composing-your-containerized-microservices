@@ -18,4 +18,5 @@ set -o pipefail
             -Dtag="${TAG}" \
             -DdbUserName="${1}" \
             -DdbPassword="${2}" \
-            -jar /app/liquibase-scripts.jar
+            -jar /app/liquibase-scripts.jar \
+       && touch /semaphore/liquibase-done.txt
