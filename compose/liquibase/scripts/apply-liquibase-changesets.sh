@@ -9,3 +9,13 @@ set -o nounset
 # Catch the error in case mysqldump fails (but gzip succeeds) in `mysqldump |gzip`
 set -o pipefail
 
+/scripts/wait-for-it.sh \
+    -t 0 \
+    db:3306 \
+    -- java -DjdbcConnUrl=jdbc:mysql://db:3306/db_example?createDatabaseIfNotExist=true \
+            -DdbName=db_example \
+            -Dtask=update \
+            -Dtag="${TAG}" \
+            -DdbUserName="${1}" \
+            -DdbPassword="${2}" \
+            -jar /app/liquibase-scripts.jar

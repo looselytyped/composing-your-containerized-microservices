@@ -2,10 +2,12 @@ version: "3.7"
 services:
   db:
     image: mariadb:10.2.11
-    ports:
-      - 3306:3306
+    expose:
+      - 3306
     environment:
       MYSQL_ROOT_PASSWORD: "my-secret-pw"
+    networks:
+      - db
 
   users:
     build:
@@ -21,3 +23,18 @@ services:
       ]
     ports:
       - 8080:8080
+
+  liquibase:
+    build:
+      context: ../liquibase-scripts
+      args:
+        LIQUIBASE_TAG: 1.0
+    command:
+      ["sh", "-c", "./scripts/apply-liquibase-changesets.sh root my-secret-pw"]
+    networks:
+      - db
+    volumes:
+      - ./liquibase/scripts:/scripts
+
+networks:
+  db:
