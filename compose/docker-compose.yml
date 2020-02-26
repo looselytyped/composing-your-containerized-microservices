@@ -5,7 +5,7 @@ services:
     expose:
       - 3306
     environment:
-      MYSQL_ROOT_PASSWORD: "my-secret-pw"
+      MYSQL_ROOT_PASSWORD: "$DB_PASSWORD"
     networks:
       - db
       - service
@@ -13,7 +13,7 @@ services:
   users:
     build:
       context: ../users-service
-    command: ["sh", "-c", "./scripts/startup.sh root my-secret-pw"]
+    command: ["sh", "-c", "./scripts/startup.sh $DB_USER $DB_PASSWORD"]
     networks:
       - service
       - frontend
@@ -27,9 +27,13 @@ services:
     build:
       context: ../liquibase-scripts
       args:
-        LIQUIBASE_TAG: 1.0
+        LIQUIBASE_TAG: $LIQUIBASE_TAG
     command:
-      ["sh", "-c", "./scripts/apply-liquibase-changesets.sh root my-secret-pw"]
+      [
+        "sh",
+        "-c",
+        "./scripts/apply-liquibase-changesets.sh $DB_USER $DB_PASSWORD",
+      ]
     networks:
       - db
     volumes:
