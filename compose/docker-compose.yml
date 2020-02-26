@@ -16,8 +16,9 @@ services:
     command: ["sh", "-c", "./scripts/startup.sh root my-secret-pw"]
     networks:
       - service
-    ports:
-      - 8080:8080
+      - frontend
+    expose:
+      - 8080
     volumes:
       - ./users/scripts:/scripts
       - liquibase:/semaphore/
@@ -35,9 +36,22 @@ services:
       - ./liquibase/scripts:/scripts
       - liquibase:/semaphore/
 
+  proxy:
+    build:
+      context: ../nginx
+    depends_on:
+      - users
+    networks:
+      - frontend
+    ports:
+      - "9000:80"
+    volumes:
+      - ./users/nginx-conf/users.conf:/etc/nginx/conf.d/includes/users.conf
+
 networks:
   db:
   service:
+  frontend:
 
 volumes:
   liquibase:
